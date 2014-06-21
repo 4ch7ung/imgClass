@@ -2,6 +2,7 @@
 ##Summary
 
 This project is a set of tools that allows one to build and perform experiments with binary image classification using Bag-of-Features approach with OpenCV. The specialty of used method is that feature extraction performed as follows:
+
 1. The image is converted in HSV color space.
 2. The Value component of the image is used to detect features.
 3. The Hue component of the image is used to compute descriptors.
