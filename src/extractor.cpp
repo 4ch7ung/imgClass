@@ -13,8 +13,11 @@
 #include <vector>
 
 #include <opencv2/core/core.hpp>
+#include <opencv2/core/core_c.h>
 #include <opencv2/nonfree/nonfree.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/types_c.h>
 #include <opencv2/legacy/legacy.hpp>
 
 using namespace cv;
@@ -40,7 +43,7 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     Mat hueImg;
     
     Mat tmpImg;
-    vector<Mat> planes;
+    std::vector<Mat> planes;
     cvtColor(img,tmpImg,CV_BGR2HSV);
     split(tmpImg,planes);
     hueImg = planes[0];
@@ -50,7 +53,7 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     Ptr<FeatureDetector> detector = FeatureDetector::create(method);
     Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create(method);
     
-    vector<KeyPoint> keypoints;
+    std::vector<KeyPoint> keypoints;
     
     detector->detect(grayImg, keypoints);
     
@@ -74,7 +77,7 @@ inline void usage()
 
 int main(int argc, const char * argv[])
 {
-    vector<Mat> descriptorsS;
+    std::vector<Mat> descriptorsS;
     if(argc < 4)
     {
         usage();

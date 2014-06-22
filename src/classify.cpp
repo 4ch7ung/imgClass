@@ -14,6 +14,7 @@
 #include <opencv2/nonfree/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/types_c.h>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/ml/ml.hpp>
 
@@ -40,8 +41,8 @@ Mat extractFeatures(const Mat& image, const char* method)
     Mat hueImg;
     
     Mat tmpImg;
-    vector<Mat> planes;
-    cvtColor(img,tmpImg,CV_BGR2HSV);
+    std::vector<Mat> planes;
+    cv::cvtColor(img, tmpImg, CV_BGR2HSV);
     split(tmpImg,planes);
     hueImg = planes[0];
     grayImg = planes[2];
@@ -50,7 +51,7 @@ Mat extractFeatures(const Mat& image, const char* method)
     Ptr<FeatureDetector> detector = FeatureDetector::create(method);
     Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create(method);
     
-    vector<KeyPoint> keypoints;
+    std::vector<KeyPoint> keypoints;
     detector->detect(grayImg, keypoints);
     Mat descriptors;
     extractor->compute(hueImg, keypoints, descriptors);
@@ -85,11 +86,6 @@ void mergeHysto(std::vector< Mat > &a, std::vector< Mat > &b)
         Mat X = a[i].clone();
         vconcat(X, b[i], a[i]);
     }
-}
-
-void Ook()
-{
-    std::cout << " LOL " << std::endl; exit(1);
 }
 
 inline void usage()
@@ -176,7 +172,6 @@ int main(int argc, const char * argv[])
             cvSave(filename, &save);
             std::cout << ((method==1)?"SIFT":"SURF") << "-based hystograms saved for " << classcount[i] << " clusters" << std::endl;
         }
-        
     }
 
     return 0;
