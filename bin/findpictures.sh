@@ -5,4 +5,4 @@ then
 	exit 1
 fi
 folder=$1
-find $folder -type f -regex "$folder/..*\..*" | xargs
+find $folder -type f -regex ".*\.jpg" | xargs

@@ -6,9 +6,9 @@ then
 fi
 svmf=$1
 expf=$2
-for i in {1..10}
+for i in {0..4}
 do
-  histf="$expf/experiment$i/histos"
-  "$svmf"/svm_run.sh "$svmf"/svmify $i 1 "$histf/learn" "$histf/test" "$expf/results/resSIFT-Precision$i.txt" "$expf/results/resSIFT-Recall$i.txt" "$expf/results/resSIFT-FScore$i.txt" &
-  "$svmf"/svm_run.sh "$svmf"/svmify $i 2 "$histf/learn" "$histf/test" "$expf/results/resSURF-Precision$i.txt" "$expf/results/resSURF-Recall$i.txt" "$expf/results/resSURF-FScore$i.txt" &
+  histf="$expf/fold_$i/histos"
+  "$svmf"/svm_run.sh "$svmf"/svmify $i 1 "$histf/train" "$histf/test" "$expf/fold_$i/results/resSIFT-Precision$i.txt" "$expf/fold_$i/results/resSIFT-Recall$i.txt" "$expf/fold_$i/results/resSIFT-FScore$i.txt" &
+  "$svmf"/svm_run.sh "$svmf"/svmify $i 2 "$histf/train" "$histf/test" "$expf/fold_$i/results/resSURF-Precision$i.txt" "$expf/fold_$i/results/resSURF-Recall$i.txt" "$expf/fold_$i/results/resSURF-FScore$i.txt" &
 done
