@@ -45,9 +45,12 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     Mat tmpImg;
     std::vector<Mat> planes;
     cvtColor(img,tmpImg,CV_BGR2HLS);
-    split(tmpImg,planes);
+    printf("HLS img size: %ld x %ld\n", tmpImg.size().width, tmpImg.size().height);
+	split(tmpImg,planes);
     hueImg = planes[0];
     grayImg = planes[2];
+    printf("HUE img size: %ld x %ld\n", hueImg.size().width, hueImg.size().height);
+    printf("Gray img size: %ld x %ld\n", grayImg.size().width, grayImg.size().height);	
     tmpImg.release();
     
     Ptr<FeatureDetector> detector = FeatureDetector::create(method);
@@ -60,7 +63,9 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     Mat descriptors, descriptors_gs, descriptors_hue;
     extractor->compute(grayImg, keypoints, descriptors_gs);
     extractor->compute(hueImg, keypoints, descriptors_hue);
-    hconcat(descriptors, descriptors_gs, descriptors_hue);
+	printf("GS descriptors size: %ld x %ld\n", descriptors_gs.size().width, descriptors_gs.size().height);
+	printf("HUE descriptors size: %ld x %ld\n", descriptors_hue.size().width, descriptors_hue.size().height);
+    hconcat(descriptors_gs, descriptors_hue, descriptors);
     
     Mat I = Mat(descriptors.rows, 1, descriptors.type(), mark);
     hconcat(I, descriptors, descriptors);

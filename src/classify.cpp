@@ -56,7 +56,7 @@ Mat extractFeatures(const Mat& image, const char* method)
     Mat descriptors, descriptors_gs, descriptors_hue;
     extractor->compute(hueImg, keypoints, descriptors_hue);
     extractor->compute(grayImg, keypoints, descriptors_gs);
-    hconcat(descriptors, descriptors_gs, descriptors_hue)
+    hconcat(descriptors_gs, descriptors_hue, descriptors);
     
     return descriptors;
 }
