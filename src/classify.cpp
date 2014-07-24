@@ -2,7 +2,7 @@
 //  main.cpp
 //  classify
 //
-//  Created by mac on 07.03.14.
+//  Created by riovcharenko on 07.03.14.
 //  Copyright (c) 2014 riovcharenko. All rights reserved.
 //
 
@@ -42,7 +42,7 @@ Mat extractFeatures(const Mat& image, const char* method)
     
     Mat tmpImg;
     std::vector<Mat> planes;
-    cv::cvtColor(img, tmpImg, CV_BGR2HSV);
+    cv::cvtColor(img, tmpImg, CV_BGR2HLS);
     split(tmpImg,planes);
     hueImg = planes[0];
     grayImg = planes[2];
@@ -53,8 +53,10 @@ Mat extractFeatures(const Mat& image, const char* method)
     
     std::vector<KeyPoint> keypoints;
     detector->detect(grayImg, keypoints);
-    Mat descriptors;
-    extractor->compute(hueImg, keypoints, descriptors);
+    Mat descriptors, descriptors_gs, descriptors_hue;
+    extractor->compute(hueImg, keypoints, descriptors_hue);
+    extractor->compute(grayImg, keypoints, descriptors_gs);
+    hconcat(descriptors, descriptors_gs, descriptors_hue)
     
     return descriptors;
 }
@@ -127,7 +129,7 @@ int main(int argc, const char * argv[])
 
     Mat clastersS;
     char filename2[256];
-    sprintf(filename2, "%s/clusters50-1000%s.xml", inFolder, (method==1)?"SIFT":"SURF");
+    sprintf(filename2, "%s/clusters200-400%s.xml", inFolder, (method==1)?"SIFT":"SURF");
     FileStorage fsc(filename2, FileStorage::READ);
     FileNode fnc = fsc.getFirstTopLevelNode();
     fnc >> clastersS;
@@ -144,8 +146,8 @@ int main(int argc, const char * argv[])
     }
     std::cout << ((method == 1)?"SIFT":"SURF") << " kNearest classifiers trained" << std::endl;
 
-    int classcount[20];
-    for(int i = 50, k = 0; i <= 1000; i+=50) classcount[k++] = i;
+    int classcount[5];
+    for(int i = 200, k = 0; i <= 400; i+=50) classcount[k++] = i;
     std::vector< Mat > hystogramsS;
     hystogramsS.resize(lssize);
     for(int i = 1; i <= numImages; ++i)

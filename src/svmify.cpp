@@ -2,7 +2,7 @@
 //  main.cpp
 //  svmify
 //
-//  Created by mac on 30.03.14.
+//  Created by riovcharenko on 30.03.14.
 //  Copyright (c) 2014 riovcharenko. All rights reserved.
 //
 
@@ -22,7 +22,7 @@
 
 using namespace cv;
 
-const int clusters = 20;
+const int clusters = 5;
 const int steps = 9;
 
 void usage()
@@ -67,7 +67,7 @@ int main(int argc, const char * argv[])
     for(int step = 1; step <= steps; ++step)
     {
         param[step-1] = 0.1*step;
-        for(int k = 50; k <= 1000; k+=50)
+        for(int k = 200; k <= 400; k+=50)
         {
             Mat dataFile;
             char filename[256];
@@ -87,7 +87,7 @@ int main(int argc, const char * argv[])
             CvSVMParams params = CvSVMParams();
             params.svm_type = CvSVM::NU_SVC;
             params.kernel_type = CvSVM::POLY;
-            params.degree = 3;
+            params.degree = 2;
             params.gamma = 1;
             params.coef0 = 1;
             params.nu = param[step-1];
@@ -122,12 +122,12 @@ int main(int argc, const char * argv[])
             }
             
             svm.clear();
-            int clusterstep = k/50 - 1;
+            int clusterstep = k/50 - 4;
             precision[step-1][clusterstep] = truePositive / (truePositive + falsePositive);
             recall[step-1][clusterstep] = truePositive / (truePositive + falseNegative);
             fscore[step-1][clusterstep] = 2 * precision[step-1][clusterstep] * recall[step-1][clusterstep] /
                                             (precision[step-1][clusterstep] + recall[step-1][clusterstep]);
-            float done = float((step-1)*clusters + k/50-1)/totalSteps;
+            float done = float((step-1)*clusters + k/50-4)/totalSteps;
             std::cout << "Done " << done*100 << "%" << std::endl;
         }
     }

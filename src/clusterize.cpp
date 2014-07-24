@@ -2,7 +2,7 @@
 //  main.cpp
 //  clusterize
 //
-//  Created by mac on 30.03.14.
+//  Created by riovcharenko on 30.03.14.
 //  Copyright (c) 2014 riovcharenko. All rights reserved.
 //
 
@@ -52,7 +52,7 @@ int main(int argc, const char * argv[])
     std::cout << descriptorsS.rows << ((method == '1') ? " SIFT" : " SURF") << " descriptors read" << std::endl;
     
     std::vector< Mat > resultVectorS;
-    for(int k = 50; k <= 1000; k+=50)
+    for(int k = 200; k <= 400; k+=50)
     {
         Mat clusters, labels;
         TermCriteria termcrit;
@@ -71,14 +71,14 @@ int main(int argc, const char * argv[])
     if(labelsS.dims >= 2)
     {
         char filename[256];
-        sprintf(filename, "%s/clusters50-1000%s.xml", outFolder, (method == '1')?"SIFT":"SURF");
+        sprintf(filename, "%s/clusters200-400%s.xml", outFolder, (method == '1')?"SIFT":"SURF");
         cvSave(filename, &save);
         std::cout << "Cluster data (" << ((method == '1')?"SIFT":"SURF") << ") saved." << std::endl;
     }
     labelsS.release();
     
-    int classcount[20];
-    for(int i = 50, k = 0; i <= 1000; i+=50) classcount[k++] = i;
+    int classcount[5];
+    for(int i = 200, k = 0; i <= 400; i+=50) classcount[k++] = i;
     for(int i = 0; i < clusterVectorS.size(); ++i)
     {
         char filename[256];

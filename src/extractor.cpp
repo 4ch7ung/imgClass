@@ -1,8 +1,8 @@
 //
 //  main.cpp
-//  opencvtest
+//  extractor
 //
-//  Created by mac on 04.02.14.
+//  Created by riovcharenko on 04.02.14.
 //  Copyright (c) 2014 riovcharenko. All rights reserved.
 //
 #include <stdio.h>
@@ -44,7 +44,7 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     
     Mat tmpImg;
     std::vector<Mat> planes;
-    cvtColor(img,tmpImg,CV_BGR2HSV);
+    cvtColor(img,tmpImg,CV_BGR2HLS);
     split(tmpImg,planes);
     hueImg = planes[0];
     grayImg = planes[2];
@@ -57,9 +57,11 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     
     detector->detect(grayImg, keypoints);
     
-    Mat descriptors;
+    Mat descriptors, descriptors_gs, descriptors_hue;
+    extractor->compute(grayImg, keypoints, descriptors_gs);
+    extractor->compute(hueImg, keypoints, descriptors_hue);
+    hconcat(descriptors, descriptors_gs, descriptors_hue);
     
-    extractor->compute(hueImg, keypoints, descriptors);
     Mat I = Mat(descriptors.rows, 1, descriptors.type(), mark);
     hconcat(I, descriptors, descriptors);
     return descriptors;
