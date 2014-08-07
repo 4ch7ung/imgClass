@@ -60,6 +60,7 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     
     detector->detect(grayImg, keypoints);
     
+    printf("Keypoints detected: %d", keypoints.size());
     Mat descriptors, descriptors_gs, descriptors_hue;
     extractor->compute(grayImg, keypoints, descriptors_gs);
     extractor->compute(hueImg, keypoints, descriptors_hue);
