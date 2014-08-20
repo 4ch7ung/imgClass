@@ -11,7 +11,7 @@ histo_folder="$ex_folder/histos"
 if [[ ! -f "$ex_folder/descriptors$1.xml" ]]
 then
 	echo "Extracting $1 features"
-	"$sp/extractor" "$1" "$ex_folder" `"$sp/findpictures.sh" "$ex_folder/train"` >"$ex_folder/logs/extractor.log"
+	"$sp/extractor" "$1" "$ex_folder" `"$sp/findpictures.sh" "$ex_folder/train"` | tee "$ex_folder/logs/extractor$1.log"
 else
 	echo "[SKIP]: Skipping $1 descriptor extraction"
 fi
@@ -26,7 +26,7 @@ fi
 if [[ ! -f "$ex_folder/clusterCenters$1-1000.xml" ]]
 then
 	echo "Clustering $1 features"
-	"$sp/clusterize" "$method" "$ex_folder" "$ex_folder" >"$ex_folder/logs/clusterize.log"
+	"$sp/clusterize" "$method" "$ex_folder" "$ex_folder" | tee "$ex_folder/logs/clusterize$1.log"
 else
 	echo "[SKIP]: Skipping $1 descriptor clusterisation"
 fi
@@ -34,7 +34,7 @@ fi
 if [[ ! -f "$histo_folder/train/hystogram$1-1000.xml" ]]
 then
 	echo "Computing $1 histograms for train examples"
-	"$sp/classify" "$method" "$ex_folder" "$histo_folder/train" `"$sp/findpictures.sh" "$ex_folder/train"` >"$ex_folder/logs/classify_train.log" &
+	"$sp/classify" "$method" "$ex_folder" "$histo_folder/train" `"$sp/findpictures.sh" "$ex_folder/train"` | tee "$ex_folder/logs/classify_train$1.log" &
 else
 	echo "[SKIP]: Skipping $1 histo computation for train examples"
 fi
@@ -42,12 +42,12 @@ fi
 if [[ ! -f "$histo_folder/test/hystogram$1-1000.xml" ]]
 then
 	echo "Computing $1 histograms for test examples"
-	"$sp/classify" "$method" "$ex_folder" "$histo_folder/test" `"$sp/findpictures.sh" "$ex_folder/test"` >"$ex_folder/logs/classify_test.log"
+	"$sp/classify" "$method" "$ex_folder" "$histo_folder/test" `"$sp/findpictures.sh" "$ex_folder/test"` | tee "$ex_folder/logs/classify_test$1.log"
 else
 	echo "[SKIP]: Skipping $1 histo computation for test examples"
 fi
 
-if [[ -f "$histo_folder/test/hystogram$1-1000.xml" -a -f "$histo_folder/train/hystogram$1-1000.xml" ]]
+if [[ -f "$histo_folder/test/hystogram$1-1000.xml" && -f "$histo_folder/train/hystogram$1-1000.xml" ]]
 then
 	echo "SVM need some time to calc"
 	"$sp/svmify" "$method" "$histo_folder/train" "$histo_folder/test" "$ex_folder/results$1.txt" >"$ex_folder/logs/svmify.log"

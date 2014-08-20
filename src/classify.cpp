@@ -45,7 +45,7 @@ Mat extractFeatures(const Mat& image, const char* method)
     cv::cvtColor(img, tmpImg, CV_BGR2HLS);
     split(tmpImg,planes);
     hueImg = planes[0];
-    grayImg = planes[2];
+    grayImg = planes[1];
     tmpImg.release();
     
     Ptr<FeatureDetector> detector = FeatureDetector::create(method);
@@ -156,7 +156,7 @@ int main(int argc, const char * argv[])
         tmpS.resize(lssize);
         auto currentImage = argv[i+3];
         int k = (i<=numImages/2)?1:2;
-        std::cout << currentImage << " class " << k << std::endl;
+        std::cout << "[" << i << "/" << numImages << "] " << currentImage << " class " << k << std::endl;
         Mat img = imread(currentImage);
         tmpS = extractHystogram(img, classifiersS, lssize, classcount, (method==1)?"SIFT":"SURF", k);
         if( hystogramsS[0].empty() )

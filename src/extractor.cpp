@@ -48,10 +48,10 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     printf("HLS img size: %ld x %ld\n", tmpImg.size().width, tmpImg.size().height);
 	split(tmpImg,planes);
     hueImg = planes[0];
-    grayImg = planes[2];
+    grayImg = planes[1];
     printf("HUE img size: %ld x %ld\n", hueImg.size().width, hueImg.size().height);
     printf("Gray img size: %ld x %ld\n", grayImg.size().width, grayImg.size().height);	
-    tmpImg.release();
+//    tmpImg.release();
     
     Ptr<FeatureDetector> detector = FeatureDetector::create(method);
     Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create(method);
@@ -60,7 +60,7 @@ Mat extractFeatures(const char* filename, const char* method, int mark)
     
     detector->detect(grayImg, keypoints);
     
-    printf("Keypoints detected: %d", keypoints.size());
+    printf("Keypoints detected: %d\n", keypoints.size());
     Mat descriptors, descriptors_gs, descriptors_hue;
     extractor->compute(grayImg, keypoints, descriptors_gs);
     extractor->compute(hueImg, keypoints, descriptors_hue);

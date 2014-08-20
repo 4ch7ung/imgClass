@@ -40,7 +40,7 @@ void printResults(float matrix[steps][clusters], const char* header, const char*
     std::cout << std::endl;
     for(int i = 0; i < clusters; ++i)
     {
-        std::cout << std::setw(5) << (i+1)*50 << ":";
+        std::cout << std::setw(5) << (i+4)*50 << ":";
         for(int j = 0; j < steps; ++j)
             std::cout << std::setw(6) << std::setprecision(3) << matrix[j][i]*100;
         std::cout << std::endl;
